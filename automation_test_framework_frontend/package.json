@@ -12,7 +12,13 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "test:e2e": "npx playwright test",
+    "test:e2e:chromium": "npx playwright test --project=chromium",
+    "test:e2e:firefox": "npx playwright test --project=firefox",
+    "test:e2e:webkit": "npx playwright test --project=webkit",
+    "test:e2e:headed": "npx playwright test --headed",
+    "test:e2e:report": "npx playwright show-report"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -30,6 +36,7 @@
     ]
   },
   "devDependencies": {
+    "@playwright/test": "^1.58.2",
     "cross-env": "^7.0.3"
   }
 }

@@ -2,6 +2,7 @@ import pluginJs from "@eslint/js";
 import pluginReact from "eslint-plugin-react";
 
 export default [
+  { ignores: ["e2e/**", "playwright-report/**", "test-results/**"] },
   { files: ["**/*.{js,mjs,cjs,jsx}"] },
   { 
     languageOptions: { 
