@@ -39,9 +39,53 @@ const INVALID_CREDENTIALS = {
   empty: '',
 };
 
+// PUBLIC_INTERFACE
+/**
+ * Boundary input test data for login field validation.
+ * Includes long strings, special characters, and unicode inputs.
+ */
+const BOUNDARY_INPUTS = {
+  longUsername: 'a'.repeat(500),
+  longPassword: 'p'.repeat(500),
+  specialCharsUsername: '!@#$%^&*()_+-=[]{}|;:\'",.<>?/`~',
+  specialCharsPassword: '!@#$%^&*()_+-=[]{}|;:\'",.<>?/`~',
+  unicodeUsername: '用户名テスト🚀',
+  unicodePassword: 'пароль密码🔒',
+  whitespaceOnly: '   ',
+  leadingTrailingSpaces: '  tomsmith  ',
+};
+
+// PUBLIC_INTERFACE
+/**
+ * SQL injection payloads for security testing.
+ * These are common attack vectors that login forms must safely handle.
+ */
+const SQL_INJECTION_PAYLOADS = [
+  "' OR '1'='1",
+  "' OR '1'='1' --",
+  "'; DROP TABLE users; --",
+  "admin'--",
+  "1' OR '1' = '1",
+  "' UNION SELECT * FROM users --",
+];
+
+// PUBLIC_INTERFACE
+/**
+ * XSS (Cross-Site Scripting) payloads for security testing.
+ * Login forms should sanitize or escape these inputs.
+ */
+const XSS_PAYLOADS = [
+  '<script>alert("XSS")</script>',
+  '<img src=x onerror=alert(1)>',
+  '"><script>alert(document.cookie)</script>',
+];
+
 module.exports = {
   HEROKU_LOGIN,
   PRACTICE_TEST_LOGIN,
   SAUCE_DEMO_LOGIN,
   INVALID_CREDENTIALS,
+  BOUNDARY_INPUTS,
+  SQL_INJECTION_PAYLOADS,
+  XSS_PAYLOADS,
 };

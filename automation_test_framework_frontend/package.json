@@ -22,6 +22,10 @@
     "test:e2e:heroku": "npx playwright test heroku-login",
     "test:e2e:practice": "npx playwright test practice-test-login",
     "test:e2e:saucedemo": "npx playwright test saucedemo-login",
+    "test:e2e:expanded": "npx playwright test --grep 'Expanded'",
+    "test:e2e:heroku:expanded": "npx playwright test heroku-login-expanded",
+    "test:e2e:practice:expanded": "npx playwright test practice-test-login-expanded",
+    "test:e2e:saucedemo:expanded": "npx playwright test saucedemo-login-expanded",
     "test:e2e:report": "npx playwright show-report playwright-report"
   },
   "eslintConfig": {
