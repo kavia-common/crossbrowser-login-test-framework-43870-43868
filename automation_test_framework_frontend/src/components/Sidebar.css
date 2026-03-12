@@ -1,0 +1,141 @@
+/* Sidebar layout and styling */
+.sidebar {
+  width: 260px;
+  min-height: 100vh;
+  background-color: #ffffff;
+  border-right: 1px solid #e5e7eb;
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 100;
+  box-shadow: 1px 0 3px rgba(0, 0, 0, 0.04);
+}
+
+/* Header / Branding */
+.sidebar-header {
+  padding: 20px 20px 16px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.sidebar-logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.sidebar-logo-icon {
+  font-size: 28px;
+  line-height: 1;
+}
+
+.sidebar-title-block {
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #111827;
+  margin: 0;
+  line-height: 1.3;
+}
+
+.sidebar-subtitle {
+  font-size: 12px;
+  color: #64748b;
+  font-weight: 500;
+}
+
+/* Navigation */
+.sidebar-nav {
+  flex: 1;
+  padding: 12px 12px;
+  overflow-y: auto;
+}
+
+.sidebar-nav-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.sidebar-nav-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  border-radius: 8px;
+  text-decoration: none;
+  color: #374151;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.sidebar-nav-link:hover {
+  background-color: #f3f4f6;
+  color: #3b82f6;
+}
+
+.sidebar-nav-link.active {
+  background-color: rgba(59, 130, 246, 0.08);
+  color: #3b82f6;
+  font-weight: 600;
+}
+
+.nav-icon {
+  font-size: 18px;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.nav-label {
+  line-height: 1;
+}
+
+/* Footer */
+.sidebar-footer {
+  padding: 16px 20px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.sidebar-footer-text {
+  font-size: 11px;
+  color: #9ca3af;
+  margin: 0;
+  text-align: center;
+}
+
+/* Responsive: collapse sidebar on small screens */
+@media (max-width: 768px) {
+  .sidebar {
+    width: 64px;
+    overflow: hidden;
+  }
+
+  .sidebar-header {
+    padding: 16px 12px;
+  }
+
+  .sidebar-title-block,
+  .nav-label,
+  .sidebar-subtitle,
+  .sidebar-footer-text {
+    display: none;
+  }
+
+  .sidebar-nav-link {
+    justify-content: center;
+    padding: 12px;
+  }
+
+  .nav-icon {
+    font-size: 22px;
+  }
+}

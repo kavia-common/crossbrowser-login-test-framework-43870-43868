@@ -1,104 +1,96 @@
-/* CSS Variables for Theme Management */
+/* ===================================
+   Global CSS Variables — Light Theme
+   Accents: #3b82f6 (primary), #06b6d4 (success)
+   =================================== */
 :root {
-  /* Light theme colors */
-  --bg-primary: #ffffff;
-  --bg-secondary: #f8f9fa;
-  --text-primary: #282c34;
-  --text-secondary: #61dafb;
-  --border-color: #e9ecef;
-  --button-bg: #007bff;
-  --button-text: #ffffff;
+  --color-primary: #3b82f6;
+  --color-primary-hover: #2563eb;
+  --color-secondary: #64748b;
+  --color-success: #06b6d4;
+  --color-error: #ef4444;
+  --color-background: #f9fafb;
+  --color-surface: #ffffff;
+  --color-text: #111827;
+  --color-text-secondary: #64748b;
+  --color-text-muted: #9ca3af;
+  --color-border: #e5e7eb;
+  --color-border-light: #f3f4f6;
+  --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+    'Helvetica Neue', Arial, sans-serif;
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.06);
 }
 
-[data-theme="dark"] {
-  /* Dark theme colors */
-  --bg-primary: #1a1a1a;
-  --bg-secondary: #282c34;
-  --text-primary: #ffffff;
-  --text-secondary: #61dafb;
-  --border-color: #404040;
-  --button-bg: #0056b3;
-  --button-text: #ffffff;
-}
-
+/* ===================================
+   App root
+   =================================== */
 .App {
-  text-align: center;
-  background-color: var(--bg-primary);
-  color: var(--text-primary);
   min-height: 100vh;
-  transition: background-color 0.3s ease, color 0.3s ease;
+  background-color: var(--color-background);
+  color: var(--color-text);
+  font-family: var(--font-family);
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+/* ===================================
+   Shared page-level typography (used by pages)
+   =================================== */
+.page-header {
+  margin-bottom: 28px;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.page-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--color-text);
+  margin: 0 0 6px 0;
 }
 
-.App-header {
-  background-color: var(--bg-secondary);
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: var(--text-primary);
-  transition: background-color 0.3s ease;
-  position: relative;
-}
-
-.App-link {
-  color: var(--text-secondary);
-  transition: color 0.3s ease;
-}
-
-.theme-toggle {
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  background-color: var(--button-bg);
-  color: var(--button-text);
-  border: none;
-  border-radius: 8px;
-  padding: 10px 20px;
+.page-description {
   font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  color: var(--color-text-secondary);
+  margin: 0;
 }
 
-.theme-toggle:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-  opacity: 0.9;
+/* ===================================
+   Shared utility classes
+   =================================== */
+.empty-state {
+  text-align: center;
+  padding: 48px 20px;
+  color: var(--color-text-muted);
 }
 
-.theme-toggle:active {
-  transform: translateY(0);
+.empty-icon {
+  font-size: 40px;
+  display: block;
+  margin-bottom: 12px;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.empty-state p {
+  font-size: 14px;
+  margin: 0;
 }
 
-/* Responsive design for mobile */
-@media (max-width: 768px) {
-  .theme-toggle {
-    top: 10px;
-    right: 10px;
-    padding: 8px 16px;
-    font-size: 12px;
-  }
+/* ===================================
+   Scrollbar styling (webkit)
+   =================================== */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #9ca3af;
 }

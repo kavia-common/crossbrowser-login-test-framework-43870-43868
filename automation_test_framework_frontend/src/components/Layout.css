@@ -1,0 +1,22 @@
+/* Main layout with sidebar + content */
+.app-layout {
+  display: flex;
+  min-height: 100vh;
+  background-color: #f9fafb;
+}
+
+.main-content {
+  flex: 1;
+  margin-left: 260px;
+  padding: 32px;
+  min-height: 100vh;
+  overflow-y: auto;
+}
+
+/* Responsive adjustment */
+@media (max-width: 768px) {
+  .main-content {
+    margin-left: 64px;
+    padding: 20px;
+  }
+}
