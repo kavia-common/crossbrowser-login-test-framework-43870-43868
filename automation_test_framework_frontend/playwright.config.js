@@ -3,10 +3,19 @@ const { defineConfig, devices } = require('@playwright/test');
 
 /**
  * Playwright configuration for cross-browser login test framework.
+ *
  * Configures test directory, timeouts, retries, reporters, and
  * browser projects for Chromium, Firefox, and WebKit.
  *
+ * HTML Report (saved to playwright-report/) captures:
+ *  - Total tests executed
+ *  - Passed / failed / skipped test counts
+ *  - Execution time (duration) per test and overall
+ *  - Browser used (project name and device info)
+ *  - Individual test steps (enabled via trace recording)
+ *
  * @see https://playwright.dev/docs/test-configuration
+ * @see https://playwright.dev/docs/test-reporters#html-reporter
  */
 module.exports = defineConfig({
   /* Directory containing the test files */
@@ -32,20 +41,39 @@ module.exports = defineConfig({
   /* Limit parallel workers on CI for stability */
   workers: process.env.CI ? 1 : undefined,
 
-  /* Reporter configuration: HTML report + list output */
+  /**
+   * Reporter configuration.
+   *
+   * - 'list'  : real-time console output during test execution.
+   * - 'html'  : generates an interactive HTML report inside the
+   *             "playwright-report" folder.  The report automatically
+   *             includes totals, pass/fail/skipped counts, execution
+   *             duration, browser/project info, and detailed test steps.
+   *             `open: 'never'` prevents auto-opening in CI.
+   * - 'json'  : machine-readable results saved for downstream tooling.
+   */
   reporter: [
     ['list'],
     ['html', { open: 'never', outputFolder: 'playwright-report' }],
     ['json', { outputFile: 'test-results/results.json' }],
   ],
 
-  /* Shared settings for all projects */
+  /* Shared settings applied to every project/browser */
   use: {
-    /* Collect trace on first retry for debugging */
-    trace: 'on-first-retry',
+    /**
+     * Trace recording — captures step-by-step actions, network, DOM
+     * snapshots and console output so the HTML report can display
+     * individual test steps with timing information.
+     * 'retain-on-failure' keeps traces for failed tests; use 'on' to
+     * capture traces for every test run (useful for full step reporting).
+     */
+    trace: 'retain-on-failure',
 
-    /* Capture screenshot on failure */
+    /* Capture screenshot on failure for visual debugging */
     screenshot: 'only-on-failure',
+
+    /* Record video on failure for step-level playback in HTML report */
+    video: 'retain-on-failure',
 
     /* Default action timeout */
     actionTimeout: 10000,
@@ -54,7 +82,12 @@ module.exports = defineConfig({
     navigationTimeout: 15000,
   },
 
-  /* Configure cross-browser projects */
+  /**
+   * Cross-browser projects.
+   * Each project name (chromium, firefox, webkit) and device
+   * configuration is displayed in the HTML report so the reader
+   * can see which browser executed each test.
+   */
   projects: [
     {
       name: 'chromium',

@@ -22,7 +22,7 @@
     "test:e2e:heroku": "npx playwright test heroku-login",
     "test:e2e:practice": "npx playwright test practice-test-login",
     "test:e2e:saucedemo": "npx playwright test saucedemo-login",
-    "test:e2e:report": "npx playwright show-report"
+    "test:e2e:report": "npx playwright show-report playwright-report"
   },
   "eslintConfig": {
     "extends": "react-app"
