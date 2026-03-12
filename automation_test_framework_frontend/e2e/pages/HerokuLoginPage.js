@@ -1,4 +1,5 @@
 const BasePage = require('./BasePage');
+const { HEROKU_LOGIN } = require('../utils/credentials');
 
 /**
  * HerokuLoginPage - Page Object Model for the-internet.herokuapp.com/login.
@@ -8,45 +9,27 @@ const BasePage = require('./BasePage');
  * Valid credentials: tomsmith / SuperSecretPassword!
  */
 class HerokuLoginPage extends BasePage {
-  /**
-   * Creates a new HerokuLoginPage instance with all page locators.
-   * @param {import('@playwright/test').Page} page - Playwright page object
-   */
   constructor(page) {
     super(page);
-
-    /** @type {string} URL of the Heroku login page */
-    this.url = 'https://the-internet.herokuapp.com/login';
-
-    // Form element locators
+    this.url = HEROKU_LOGIN.url;
     this.usernameInput = page.locator('#username');
     this.passwordInput = page.locator('#password');
     this.loginButton = page.locator('button[type="submit"]');
-
-    // Feedback message locators
     this.flashMessage = page.locator('#flash');
     this.successMessage = page.locator('#flash.success');
     this.errorMessage = page.locator('#flash.error');
-
-    // Post-login locator
     this.logoutButton = page.locator('a[href="/logout"]');
     this.pageHeading = page.locator('h2');
   }
 
   // PUBLIC_INTERFACE
-  /**
-   * Navigates to the Heroku login page.
-   */
+  /** Navigates to the Heroku login page. */
   async navigate() {
     await this.navigateTo(this.url);
   }
 
   // PUBLIC_INTERFACE
-  /**
-   * Performs a login action with the given credentials.
-   * @param {string} username - The username to enter
-   * @param {string} password - The password to enter
-   */
+  /** Performs a login action with the given credentials. */
   async login(username, password) {
     await this.usernameInput.fill(username);
     await this.passwordInput.fill(password);
@@ -54,10 +37,7 @@ class HerokuLoginPage extends BasePage {
   }
 
   // PUBLIC_INTERFACE
-  /**
-   * Returns the text content of the flash message element.
-   * @returns {Promise<string>} The flash message text
-   */
+  /** Returns the text content of the flash message element. */
   async getFlashMessageText() {
     await this.flashMessage.waitFor({ state: 'visible', timeout: 10000 });
     const text = await this.flashMessage.textContent();
@@ -65,10 +45,7 @@ class HerokuLoginPage extends BasePage {
   }
 
   // PUBLIC_INTERFACE
-  /**
-   * Checks if the success flash message is visible.
-   * @returns {Promise<boolean>} True if success message is displayed
-   */
+  /** Checks if the success flash message is visible. */
   async isSuccessMessageVisible() {
     try {
       await this.successMessage.waitFor({ state: 'visible', timeout: 5000 });
@@ -79,10 +56,7 @@ class HerokuLoginPage extends BasePage {
   }
 
   // PUBLIC_INTERFACE
-  /**
-   * Checks if the error flash message is visible.
-   * @returns {Promise<boolean>} True if error message is displayed
-   */
+  /** Checks if the error flash message is visible. */
   async isErrorMessageVisible() {
     try {
       await this.errorMessage.waitFor({ state: 'visible', timeout: 5000 });

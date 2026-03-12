@@ -1,97 +1,64 @@
 // @ts-check
 const { test, expect } = require('@playwright/test');
-const HerokuLoginPage = require('../pages/HerokuLoginPage');
+const { HerokuLoginPage } = require('../pages');
+const { HEROKU_LOGIN, INVALID_CREDENTIALS } = require('../utils/credentials');
+const { expectUrlToMatch, expectConditionToBeTrue, expectTextToContain, logStep } = require('../utils/testHelpers');
 
 /**
  * Login functionality tests for https://the-internet.herokuapp.com/login
- *
- * Covers four key scenarios:
- * 1. Valid login with correct credentials
- * 2. Invalid username with correct password
- * 3. Valid username with invalid password
- * 4. Empty credentials submission
- *
- * Valid credentials: tomsmith / SuperSecretPassword!
+ * Covers: valid login, invalid username, invalid password, empty credentials
  */
 test.describe('Heroku App - Login Functionality', () => {
-
   /** @type {HerokuLoginPage} */
   let loginPage;
 
   test.beforeEach(async ({ page }) => {
     loginPage = new HerokuLoginPage(page);
     await loginPage.navigate();
+    logStep('HerokuLogin', 'Navigated to login page');
   });
 
   test('should login successfully with valid credentials', async ({ page }) => {
-    // Arrange: valid credentials for the-internet.herokuapp.com
-    const validUsername = 'tomsmith';
-    const validPassword = 'SuperSecretPassword!';
-
-    // Act: perform login
+    const { validUsername, validPassword } = HEROKU_LOGIN;
     await loginPage.login(validUsername, validPassword);
-
-    // Assert: verify successful login
-    // URL should change to /secure
-    await expect(page).toHaveURL(/\/secure/);
-
-    // Success flash message should be visible
+    logStep('HerokuLogin', 'Submitted valid credentials');
+    await expectUrlToMatch(page, /\/secure/);
     const isSuccess = await loginPage.isSuccessMessageVisible();
-    expect(isSuccess).toBe(true);
-
-    // Flash message should contain success text
+    expectConditionToBeTrue(isSuccess, 'Success message should be visible');
     const flashText = await loginPage.getFlashMessageText();
-    expect(flashText).toContain('You logged into a secure area!');
+    expectTextToContain(flashText, 'You logged into a secure area!');
   });
 
   test('should show error message with invalid username', async () => {
-    // Arrange: invalid username with valid password
-    const invalidUsername = 'invaliduser';
-    const validPassword = 'SuperSecretPassword!';
-
-    // Act: attempt login with invalid username
+    const invalidUsername = INVALID_CREDENTIALS.username;
+    const { validPassword } = HEROKU_LOGIN;
     await loginPage.login(invalidUsername, validPassword);
-
-    // Assert: verify error message is displayed
+    logStep('HerokuLogin', 'Submitted invalid username');
     const isError = await loginPage.isErrorMessageVisible();
-    expect(isError).toBe(true);
-
-    // Error message should indicate invalid username
+    expectConditionToBeTrue(isError, 'Error message should be visible');
     const flashText = await loginPage.getFlashMessageText();
-    expect(flashText).toContain('Your username is invalid!');
+    expectTextToContain(flashText, 'Your username is invalid!');
   });
 
   test('should show error message with invalid password', async () => {
-    // Arrange: valid username with invalid password
-    const validUsername = 'tomsmith';
-    const invalidPassword = 'WrongPassword123';
-
-    // Act: attempt login with invalid password
+    const { validUsername } = HEROKU_LOGIN;
+    const invalidPassword = INVALID_CREDENTIALS.password;
     await loginPage.login(validUsername, invalidPassword);
-
-    // Assert: verify error message is displayed
+    logStep('HerokuLogin', 'Submitted invalid password');
     const isError = await loginPage.isErrorMessageVisible();
-    expect(isError).toBe(true);
-
-    // Error message should indicate invalid password
+    expectConditionToBeTrue(isError, 'Error message should be visible');
     const flashText = await loginPage.getFlashMessageText();
-    expect(flashText).toContain('Your password is invalid!');
+    expectTextToContain(flashText, 'Your password is invalid!');
   });
 
   test('should show error message with empty credentials', async () => {
-    // Arrange: empty username and password
-    const emptyUsername = '';
-    const emptyPassword = '';
-
-    // Act: attempt login with empty fields
+    const emptyUsername = INVALID_CREDENTIALS.empty;
+    const emptyPassword = INVALID_CREDENTIALS.empty;
     await loginPage.login(emptyUsername, emptyPassword);
-
-    // Assert: verify error message is displayed
+    logStep('HerokuLogin', 'Submitted empty credentials');
     const isError = await loginPage.isErrorMessageVisible();
-    expect(isError).toBe(true);
-
-    // Error message should indicate invalid credentials
+    expectConditionToBeTrue(isError, 'Error message should be visible');
     const flashText = await loginPage.getFlashMessageText();
-    expect(flashText).toContain('Your username is invalid!');
+    expectTextToContain(flashText, 'Your username is invalid!');
   });
 });

@@ -1,6 +1,8 @@
 // @ts-check
 const { test, expect } = require('@playwright/test');
-const SauceDemoLoginPage = require('../pages/SauceDemoLoginPage');
+const { SauceDemoLoginPage } = require('../pages');
+const { SAUCE_DEMO_LOGIN, INVALID_CREDENTIALS } = require('../utils/credentials');
+const { expectUrlToMatch, expectConditionToBeTrue, expectTextToContain, logStep } = require('../utils/testHelpers');
 
 /**
  * Login functionality tests for https://www.saucedemo.com/
@@ -21,77 +23,50 @@ test.describe('Sauce Demo - Login Functionality', () => {
   test.beforeEach(async ({ page }) => {
     loginPage = new SauceDemoLoginPage(page);
     await loginPage.navigate();
+    logStep('SauceDemoLogin', 'Navigated to login page');
   });
 
   test('should login successfully with valid credentials', async ({ page }) => {
-    // Arrange: valid credentials for saucedemo.com
-    const validUsername = 'standard_user';
-    const validPassword = 'secret_sauce';
-
-    // Act: perform login
+    const { validUsername, validPassword } = SAUCE_DEMO_LOGIN;
     await loginPage.login(validUsername, validPassword);
-
-    // Assert: verify successful login
-    // URL should change to /inventory.html
-    await expect(page).toHaveURL(/\/inventory\.html/);
-
-    // Inventory container should be visible
+    logStep('SauceDemoLogin', 'Submitted valid credentials');
+    await expectUrlToMatch(page, /\/inventory\.html/);
     const isLoggedIn = await loginPage.isLoggedIn();
-    expect(isLoggedIn).toBe(true);
-
-    // Products title should display "Products"
+    expectConditionToBeTrue(isLoggedIn, 'Should be logged in successfully');
     const productsTitle = await loginPage.getProductsTitle();
     expect(productsTitle).toBe('Products');
   });
 
   test('should show error message with invalid username', async () => {
-    // Arrange: invalid username with valid password
     const invalidUsername = 'invalid_user';
-    const validPassword = 'secret_sauce';
-
-    // Act: attempt login with invalid username
+    const { validPassword } = SAUCE_DEMO_LOGIN;
     await loginPage.login(invalidUsername, validPassword);
-
-    // Assert: verify error message is displayed
+    logStep('SauceDemoLogin', 'Submitted invalid username');
     const isError = await loginPage.isErrorMessageVisible();
-    expect(isError).toBe(true);
-
-    // Error message should indicate credentials don't match
+    expectConditionToBeTrue(isError, 'Error message should be visible');
     const errorText = await loginPage.getErrorMessageText();
-    expect(errorText).toContain('Username and password do not match any user in this service');
+    expectTextToContain(errorText, 'Username and password do not match any user in this service');
   });
 
   test('should show error message with invalid password', async () => {
-    // Arrange: valid username with invalid password
-    const validUsername = 'standard_user';
+    const { validUsername } = SAUCE_DEMO_LOGIN;
     const invalidPassword = 'wrong_password';
-
-    // Act: attempt login with invalid password
     await loginPage.login(validUsername, invalidPassword);
-
-    // Assert: verify error message is displayed
+    logStep('SauceDemoLogin', 'Submitted invalid password');
     const isError = await loginPage.isErrorMessageVisible();
-    expect(isError).toBe(true);
-
-    // Error message should indicate credentials don't match
+    expectConditionToBeTrue(isError, 'Error message should be visible');
     const errorText = await loginPage.getErrorMessageText();
-    expect(errorText).toContain('Username and password do not match any user in this service');
+    expectTextToContain(errorText, 'Username and password do not match any user in this service');
   });
 
   test('should show error message with empty credentials', async () => {
-    // Arrange: empty username and password (just click login)
-    const emptyUsername = '';
-    const emptyPassword = '';
-
-    // Act: attempt login with empty fields
+    const emptyUsername = INVALID_CREDENTIALS.empty;
+    const emptyPassword = INVALID_CREDENTIALS.empty;
     await loginPage.login(emptyUsername, emptyPassword);
-
-    // Assert: verify error message is displayed
+    logStep('SauceDemoLogin', 'Submitted empty credentials');
     const isError = await loginPage.isErrorMessageVisible();
-    expect(isError).toBe(true);
-
-    // Error message should indicate username is required
+    expectConditionToBeTrue(isError, 'Error message should be visible');
     const errorText = await loginPage.getErrorMessageText();
-    expect(errorText).toContain('Username is required');
+    expectTextToContain(errorText, 'Username is required');
   });
 });

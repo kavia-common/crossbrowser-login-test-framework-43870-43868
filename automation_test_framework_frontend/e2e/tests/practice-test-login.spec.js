@@ -1,97 +1,64 @@
 // @ts-check
 const { test, expect } = require('@playwright/test');
-const PracticeTestLoginPage = require('../pages/PracticeTestLoginPage');
+const { PracticeTestLoginPage } = require('../pages');
+const { PRACTICE_TEST_LOGIN, INVALID_CREDENTIALS } = require('../utils/credentials');
+const { expectUrlToMatch, expectConditionToBeTrue, expectTextToContain, logStep } = require('../utils/testHelpers');
 
 /**
  * Login functionality tests for https://practicetestautomation.com/practice-test-login/
- *
- * Covers four key scenarios:
- * 1. Valid login with correct credentials
- * 2. Invalid username with correct password
- * 3. Valid username with invalid password
- * 4. Empty credentials submission
- *
- * Valid credentials: student / Password123
+ * Covers: valid login, invalid username, invalid password, empty credentials
  */
 test.describe('Practice Test Automation - Login Functionality', () => {
-
   /** @type {PracticeTestLoginPage} */
   let loginPage;
 
   test.beforeEach(async ({ page }) => {
     loginPage = new PracticeTestLoginPage(page);
     await loginPage.navigate();
+    logStep('PracticeTestLogin', 'Navigated to login page');
   });
 
   test('should login successfully with valid credentials', async ({ page }) => {
-    // Arrange: valid credentials for practicetestautomation.com
-    const validUsername = 'student';
-    const validPassword = 'Password123';
-
-    // Act: perform login
+    const { validUsername, validPassword } = PRACTICE_TEST_LOGIN;
     await loginPage.login(validUsername, validPassword);
-
-    // Assert: verify successful login
-    // URL should change to logged-in-successfully page
-    await expect(page).toHaveURL(/practicetestautomation\.com\/logged-in-successfully/);
-
-    // Page should display success heading
+    logStep('PracticeTestLogin', 'Submitted valid credentials');
+    await expectUrlToMatch(page, /practicetestautomation\.com\/logged-in-successfully/);
     const isLoggedIn = await loginPage.isLoggedIn();
-    expect(isLoggedIn).toBe(true);
-
-    // Logout link should be visible on the success page
+    expectConditionToBeTrue(isLoggedIn, 'Should be logged in successfully');
     const isLogoutVisible = await loginPage.isLogoutLinkVisible();
-    expect(isLogoutVisible).toBe(true);
+    expectConditionToBeTrue(isLogoutVisible, 'Logout link should be visible');
   });
 
   test('should show error message with invalid username', async () => {
-    // Arrange: invalid username with valid password
     const invalidUsername = 'incorrectUser';
-    const validPassword = 'Password123';
-
-    // Act: attempt login with invalid username
+    const { validPassword } = PRACTICE_TEST_LOGIN;
     await loginPage.login(invalidUsername, validPassword);
-
-    // Assert: verify error message is displayed
+    logStep('PracticeTestLogin', 'Submitted invalid username');
     const isError = await loginPage.isErrorMessageVisible();
-    expect(isError).toBe(true);
-
-    // Error message should indicate invalid username
+    expectConditionToBeTrue(isError, 'Error message should be visible');
     const errorText = await loginPage.getErrorMessageText();
-    expect(errorText).toContain('Your username is invalid!');
+    expectTextToContain(errorText, 'Your username is invalid!');
   });
 
   test('should show error message with invalid password', async () => {
-    // Arrange: valid username with invalid password
-    const validUsername = 'student';
+    const { validUsername } = PRACTICE_TEST_LOGIN;
     const invalidPassword = 'WrongPass456';
-
-    // Act: attempt login with invalid password
     await loginPage.login(validUsername, invalidPassword);
-
-    // Assert: verify error message is displayed
+    logStep('PracticeTestLogin', 'Submitted invalid password');
     const isError = await loginPage.isErrorMessageVisible();
-    expect(isError).toBe(true);
-
-    // Error message should indicate invalid password
+    expectConditionToBeTrue(isError, 'Error message should be visible');
     const errorText = await loginPage.getErrorMessageText();
-    expect(errorText).toContain('Your password is invalid!');
+    expectTextToContain(errorText, 'Your password is invalid!');
   });
 
   test('should show error message with empty credentials', async () => {
-    // Arrange: empty username and password
-    const emptyUsername = '';
-    const emptyPassword = '';
-
-    // Act: attempt login with empty fields
+    const emptyUsername = INVALID_CREDENTIALS.empty;
+    const emptyPassword = INVALID_CREDENTIALS.empty;
     await loginPage.login(emptyUsername, emptyPassword);
-
-    // Assert: verify error message is displayed
+    logStep('PracticeTestLogin', 'Submitted empty credentials');
     const isError = await loginPage.isErrorMessageVisible();
-    expect(isError).toBe(true);
-
-    // Error message should indicate invalid credentials
+    expectConditionToBeTrue(isError, 'Error message should be visible');
     const errorText = await loginPage.getErrorMessageText();
-    expect(errorText).toContain('Your username is invalid!');
+    expectTextToContain(errorText, 'Your username is invalid!');
   });
 });
