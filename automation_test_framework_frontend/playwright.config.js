@@ -50,11 +50,17 @@ module.exports = defineConfig({
    *             includes totals, pass/fail/skipped counts, execution
    *             duration, browser/project info, and detailed test steps.
    *             `open: 'never'` prevents auto-opening in CI.
+   *             Results are grouped by project (browser) so users can
+   *             filter by Chromium, Firefox, or WebKit to see
+   *             browser-specific pass/fail results.
    * - 'json'  : machine-readable results saved for downstream tooling.
    */
   reporter: [
     ['list'],
-    ['html', { open: 'never', outputFolder: 'playwright-report' }],
+    ['html', {
+      open: 'never',
+      outputFolder: 'playwright-report',
+    }],
     ['json', { outputFile: 'test-results/results.json' }],
   ],
 
@@ -84,22 +90,39 @@ module.exports = defineConfig({
 
   /**
    * Cross-browser projects.
-   * Each project name (chromium, firefox, webkit) and device
-   * configuration is displayed in the HTML report so the reader
-   * can see which browser executed each test.
+   *
+   * Each project runs the full test suite in a different browser engine.
+   * The project `name` is surfaced in the HTML report as a filterable
+   * column so reviewers can isolate results per browser:
+   *   - "chromium"  → Google Chrome / Chromium-based browsers
+   *   - "firefox"   → Mozilla Firefox / Gecko engine
+   *   - "webkit"    → Apple Safari / WebKit engine
+   *
+   * Filtering in the HTML report:
+   *   Open playwright-report/index.html and use the "Project" dropdown
+   *   or column header to view browser-specific (per-project) results.
    */
   projects: [
     {
       name: 'chromium',
-      use: { ...devices['Desktop Chrome'] },
+      use: {
+        ...devices['Desktop Chrome'],
+        /* Chromium-specific context options can be added here */
+      },
     },
     {
       name: 'firefox',
-      use: { ...devices['Desktop Firefox'] },
+      use: {
+        ...devices['Desktop Firefox'],
+        /* Firefox-specific context options can be added here */
+      },
     },
     {
       name: 'webkit',
-      use: { ...devices['Desktop Safari'] },
+      use: {
+        ...devices['Desktop Safari'],
+        /* WebKit-specific context options can be added here */
+      },
     },
   ],
 });
