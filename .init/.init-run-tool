@@ -1,0 +1,4 @@
+{
+    "command": "PORT=<port> HOST=<host> BROWSER=none npm start",
+    "working_directory": "/home/kavia/workspace/code-generation/crossbrowser-login-test-framework-43870-43868/automation_test_framework_frontend"
+}

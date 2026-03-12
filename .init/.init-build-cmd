@@ -1,0 +1,4 @@
+{
+    "command": "npm install && npx tsc --noEmit && npm test -- --ci",
+    "working_directory": "/home/kavia/workspace/code-generation/crossbrowser-login-test-framework-43870-43868/automation_test_framework_frontend"
+}
